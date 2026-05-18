@@ -1,20 +1,19 @@
 #include <iostream>
+#include <fstream>
 #include <conio.h>
 using namespace std;
-//Whole Management system with implemented Functions
-// ============================================================
-//                     GLOBAL DATA ARRAYS
-// ============================================================
+
+// GLOBAL DATA ARRAYS
 const int max_capacity = 1000;
 
-string petNames[max_capacity]  = {"Whiskers", "Tracker", "Duke", "Luna"};
-string petTypes[max_capacity]  = {"Domestic", "Field & Sport", "Field & Sport", "Domestic"};
+string petNames[max_capacity] = {"Whiskers", "Tracker", "Duke", "Luna"};
+string petTypes[max_capacity] = {"Domestic", "Field & Sport", "Field & Sport", "Domestic"};
 string petBreeds[max_capacity] = {"Persian", "Pointer", "Labrador", "Siamese"};
-int    petAges[max_capacity]   = {2, 3, 2, 1};
-float  petHealth[max_capacity] = {92.5, 98.0, 99.0, 88.0};
+int petAges[max_capacity] = {2, 3, 2, 1};
+float petHealth[max_capacity] = {92.5, 98.0, 99.0, 88.0};
 string petTraits[max_capacity] = {"Calm", "Fast Tracker", "Great Swimmer", "Playful"};
 
-double donatedMoney      = 100;
+double donatedMoney = 100;
 double totalAdoptedMoney = 500;
 double fixFeeForAdoption = 1000;
 
@@ -23,29 +22,28 @@ const int history_size = 10;
 string historyType[history_size];
 double historyAmount[history_size];
 string historyDetail[history_size];
-int    historyCount = 0;
+int historyCount = 0;
 
 int petCount = 4;
 
+// Important Credentials
+string adminUsername = "admin";
+string adminPassword = "123";
+string eraseSpecialKey = "1A2B3C";
 
-// ============================================================
-//              HELPER: Convert string to lowercase
-// ============================================================
-// Manual ASCII lowercase conversion (used for case-insensitive search)
+// Convert string to lowercase
+// Manual ASCII lowercase conversion (using this method for case-insensitive search)
 string toLower(string str)
 {
     for (int j = 0; j < str.length(); j++)
     {
-        if (str[j] >= 65 && str[j] <= 90) // If Capital (A-Z)
-            str[j] = str[j] + 32;          // Make lowercase
+        if (str[j] >= 65 && str[j] <= 90) // if capital
+            str[j] = str[j] + 32;         // making it lowercase by adding 32
     }
     return str;
 }
 
-
-// ============================================================
-//              HELPER: Display a single pet record
-// ============================================================
+// Display a single pet record
 void displayPetRecord(int i)
 {
     cout << "[ ID: " << i + 1 << " ]--------------------------------" << endl;
@@ -55,59 +53,59 @@ void displayPetRecord(int i)
     cout << "  Traits : " << petTraits[i] << endl;
 }
 
-
-// ============================================================
-//              HELPER: Swap two pets in all arrays
-// ============================================================
+// Swap two pets in all arrays
 // Swaps all parallel array data at positions j and j+1
 void swapPets(int j)
 {
-    float  tempHealth = petHealth[j]; petHealth[j] = petHealth[j+1]; petHealth[j+1] = tempHealth;
-    string tempName   = petNames[j];  petNames[j]  = petNames[j+1];  petNames[j+1]  = tempName;
-    string tempType   = petTypes[j];  petTypes[j]  = petTypes[j+1];  petTypes[j+1]  = tempType;
-    string tempBreed  = petBreeds[j]; petBreeds[j] = petBreeds[j+1]; petBreeds[j+1] = tempBreed;
-    int    tempAge    = petAges[j];   petAges[j]   = petAges[j+1];   petAges[j+1]   = tempAge;
-    string tempTrait  = petTraits[j]; petTraits[j] = petTraits[j+1]; petTraits[j+1] = tempTrait;
+    float tempHealth = petHealth[j];
+    petHealth[j] = petHealth[j + 1];
+    petHealth[j + 1] = tempHealth;
+    string tempName = petNames[j];
+    petNames[j] = petNames[j + 1];
+    petNames[j + 1] = tempName;
+    string tempType = petTypes[j];
+    petTypes[j] = petTypes[j + 1];
+    petTypes[j + 1] = tempType;
+    string tempBreed = petBreeds[j];
+    petBreeds[j] = petBreeds[j + 1];
+    petBreeds[j + 1] = tempBreed;
+    int tempAge = petAges[j];
+    petAges[j] = petAges[j + 1];
+    petAges[j + 1] = tempAge;
+    string tempTrait = petTraits[j];
+    petTraits[j] = petTraits[j + 1];
+    petTraits[j + 1] = tempTrait;
 }
 
-
-// ============================================================
-//              HELPER: Remove pet at a given index
-// ============================================================
-// Shifts all entries left to fill the gap, then decrements petCount
+// Remove pet at a given index
+// Shifts all entries left to fill the gap then decrements petCount. Proper Deletion
 void removePetAt(int found_index)
 {
     for (int i = found_index; i < petCount - 1; i++)
     {
-        petNames[i]  = petNames[i+1];
-        petTypes[i]  = petTypes[i+1];
-        petBreeds[i] = petBreeds[i+1];
-        petAges[i]   = petAges[i+1];
-        petHealth[i] = petHealth[i+1];
-        petTraits[i] = petTraits[i+1];
+        petNames[i] = petNames[i + 1];
+        petTypes[i] = petTypes[i + 1];
+        petBreeds[i] = petBreeds[i + 1];
+        petAges[i] = petAges[i + 1];
+        petHealth[i] = petHealth[i + 1];
+        petTraits[i] = petTraits[i + 1];
     }
     petCount--;
 }
 
-
-// ============================================================
-//              HELPER: Add transaction to history
-// ============================================================
+// Add transaction to history
 void addHistory(string type, double amount, string detail)
 {
     if (historyCount < history_size)
     {
-        historyType[historyCount]   = type;
+        historyType[historyCount] = type;
         historyAmount[historyCount] = amount;
         historyDetail[historyCount] = detail;
         historyCount++;
     }
 }
 
-
-// ============================================================
-//                   ADMIN: Display all pets
-// ============================================================
+// Admin menu: Display all pets
 void adminDisplayAllPets()
 {
     system("cls");
@@ -130,10 +128,7 @@ void adminDisplayAllPets()
     system("cls");
 }
 
-
-// ============================================================
-//                   ADMIN: Search pet by name
-// ============================================================
+// Admin menu: Search pet by name
 void adminSearchPet()
 {
     while (true)
@@ -159,7 +154,7 @@ void adminSearchPet()
             bool isFound = false;
             for (int i = 0; i < petCount; i++)
             {
-                if (toLower(petNames[i]) == toLower(searchName))
+                if (toLower(petNames[i]) == toLower(searchName)) // using tolower function i made to search with case insenstiveness
                 {
                     displayPetRecord(i);
                     isFound = true;
@@ -188,10 +183,7 @@ void adminSearchPet()
     }
 }
 
-
-// ============================================================
-//         ADMIN: Sort pets by health (bubble sort, highest first)
-// ============================================================
+// Admin menu: Sort pets by health (bubble sort, highest first)
 void sortByHealth()
 {
     for (int i = 0; i < petCount - 1; i++)
@@ -204,15 +196,12 @@ void sortByHealth()
     getch();
 }
 
-
-// ============================================================
-//         ADMIN: Sort pets by age (bubble sort, oldest or youngest first)
-// ============================================================
+// Admin menu: Sort pets by age (bubble sort, oldest or youngest first)
 void sortByAge()
 {
     int sortageOptions;
     system("cls");
-    // Menu for age direction
+    // Menu for age sort methods
     cout << "---> 1. Oldest to Youngest\n";
     cout << "---> 2. Youngest to Oldest\n";
     cout << "       Enter your selection : ";
@@ -240,10 +229,7 @@ void sortByAge()
     getch();
 }
 
-
-// ============================================================
-//              ADMIN: Sorting menu (health or age)
-// ============================================================
+// Admin menu: Sorting menu (health or age)
 void adminSortMenu()
 {
     while (true)
@@ -280,10 +266,7 @@ void adminSortMenu()
     }
 }
 
-
-// ============================================================
-//              ADMIN: Update pet information
-// ============================================================
+// Admin menu: Update pet information
 void adminUpdatePet()
 {
     system("cls");
@@ -300,7 +283,7 @@ void adminUpdatePet()
     {
         if (toLower(petNames[i]) == toLower(updateName))
         {
-            // Show old record first
+            // showing old record first
             cout << "OLD Record of " << updateName;
             displayPetRecord(i);
             isFound = true;
@@ -308,7 +291,7 @@ void adminUpdatePet()
             getch();
             system("cls");
 
-            // Get new data from user
+            // getting new data from user and replacing it with new
             cout << "=====================================\n";
             cout << "           Updating Pets             \n";
             cout << "=====================================\n\n";
@@ -324,20 +307,30 @@ void adminUpdatePet()
             cout << "Enter the new pet age for updating : ";
             int tempPetage;
             cin >> tempPetage;
+            while (tempPetage <= 0 || tempPetage > 30)
+            {
+                cout << "Invalid! Age must be between 1 and 30 : ";
+                cin >> tempPetage;
+            }
             cin.ignore();
             cout << "Enter the new pet health for updating : ";
             double tempPethealth;
             cin >> tempPethealth;
+            while (tempPethealth < 0 || tempPethealth > 100)
+            {
+                cout << "Invalid! Health must be between 0 and 100 : ";
+                cin >> tempPethealth;
+            }
             cin.ignore();
             cout << "Enter the new trait of the pet for updating : ";
             string tempPettrait;
             getline(cin, tempPettrait);
 
-            // Store updated data back to arrays
-            petNames[i]  = tempPetname;
-            petTypes[i]  = tempPettype;
+            // storing updated data back to arrays
+            petNames[i] = tempPetname;
+            petTypes[i] = tempPettype;
             petBreeds[i] = tempPetbreeds;
-            petAges[i]   = tempPetage;
+            petAges[i] = tempPetage;
             petHealth[i] = tempPethealth;
             petTraits[i] = tempPettrait;
 
@@ -353,10 +346,7 @@ void adminUpdatePet()
     system("cls");
 }
 
-
-// ============================================================
-//              ADMIN: Delete a pet record
-// ============================================================
+// Admin menu: Delete a pet record
 void adminDeletePet()
 {
     system("cls");
@@ -383,7 +373,7 @@ void adminDeletePet()
             getch();
             system("cls");
 
-            // Remove pet from arrays
+            // remove pet from arrays proper deletion meaning shifting the elements from right side
             removePetAt(found_index);
 
             cout << "=====================================\n";
@@ -401,10 +391,7 @@ void adminDeletePet()
     system("cls");
 }
 
-
-// ============================================================
-//              ADMIN: Inventory statistics
-// ============================================================
+// Admin menu: inventory statistics
 void adminInventoryStats()
 {
     system("cls");
@@ -420,7 +407,7 @@ void adminInventoryStats()
             int domesticCount = 0, fieldsportCount = 0;
             int oldidx = 0, youngidx = 0;
 
-            // Count domestic and field & sport pets
+            // count domestic and field & sport pets
             for (int i = 0; i < petCount; i++)
             {
                 if (petTypes[i] == "Domestic" || petTypes[i] == "domestic")
@@ -429,14 +416,16 @@ void adminInventoryStats()
                     fieldsportCount++;
             }
 
-            // Find oldest and youngest pets
+            // find oldest and youngest pets
             for (int i = 0; i < petCount; i++)
             {
-                if (petAges[i] > petAges[oldidx])   oldidx   = i;
-                if (petAges[i] < petAges[youngidx]) youngidx = i;
+                if (petAges[i] > petAges[oldidx])
+                    oldidx = i;
+                if (petAges[i] < petAges[youngidx])
+                    youngidx = i;
             }
 
-            // Display statistics
+            // display statistics
             cout << "=======================================\n";
             cout << "          Inventory Statistics         \n";
             cout << "=======================================\n\n";
@@ -452,10 +441,7 @@ void adminInventoryStats()
     }
 }
 
-
-// ============================================================
-//              ADMIN: View donation bank balance
-// ============================================================
+// Admin menu: view donation bank balance
 void adminViewDonations()
 {
     system("cls");
@@ -467,10 +453,7 @@ void adminViewDonations()
     getch();
 }
 
-
-// ============================================================
-//              ADMIN: View adoption revenue
-// ============================================================
+// Admin menu: view adoption revenue
 void adminViewAdoptionRevenue()
 {
     system("cls");
@@ -482,10 +465,7 @@ void adminViewAdoptionRevenue()
     getch();
 }
 
-
-// ============================================================
-//              ADMIN: View transaction history
-// ============================================================
+// Admin menu: view transaction history
 void adminViewTransactionHistory()
 {
     system("cls");
@@ -511,22 +491,19 @@ void adminViewTransactionHistory()
     getch();
 }
 
-
-// ============================================================
-//              ADMIN: Factory reset (clear all data)
-// ============================================================
+// Admin menu: factory reset (clear all data)
 void adminFactoryReset()
 {
     while (true)
     {
         system("cls");
         string confirmationMsg;
-        string specialKey = "1A2B3C";
         cout << "=======================================\n";
         cout << "            FACTORY RESET              \n";
         cout << "=======================================\n\n";
         cout << "[1] Are you sure you want to erase all data?(yes/no) : " << endl;
-        cout << "[2] Go back" << endl << endl;
+        cout << "[2] Go back" << endl
+             << endl;
         cout << "---------------------------------------\n";
         cout << "[?] Select an action -->(yes/no for [1] or '2' for [2]) : ";
         cin >> confirmationMsg;
@@ -536,12 +513,12 @@ void adminFactoryReset()
             string tempSpecialKey;
             cout << "Please Enter the special key : "; // special key needed to confirm reset
             cin >> tempSpecialKey;
-            if (tempSpecialKey == specialKey)
+            if (tempSpecialKey == eraseSpecialKey)
             {
-                // Reset all counters and balances to zero
-                petCount         = 0;
-                historyCount     = 0;
-                donatedMoney     = 0;
+                // Reset all counts and balances to zero
+                petCount = 0;
+                historyCount = 0;
+                donatedMoney = 0;
                 totalAdoptedMoney = 0;
                 cout << "\n[SUCCESS] System has been restored to factory settings!" << endl;
                 cout << "Press any key to continue...";
@@ -573,11 +550,8 @@ void adminFactoryReset()
     }
 }
 
-
-// ============================================================
-//              ADMIN: Login logic (3 attempts)
-// ============================================================
-// Returns true if login was successful, false otherwise
+// Admin: login logic (3 attempts)
+// Returns true if login was successful,else false
 bool adminLogin()
 {
     for (int i = 0; i < 3; i++)
@@ -595,7 +569,7 @@ bool adminLogin()
         cout << "Enter Password: ";
         cin >> password;
 
-        if (username == "admin" && password == "123") // check credentials
+        if (username == adminUsername && password == adminPassword) // compare credentials
         {
             cout << "Successfully Logged in!" << endl;
             system("cls");
@@ -614,10 +588,7 @@ bool adminLogin()
     return false;
 }
 
-
-// ============================================================
-//              ADMIN: Full admin dashboard menu
-// ============================================================
+// Admin menu: full admin dashboard menu
 void adminMenu()
 {
     bool loginSuccess = adminLogin();
@@ -646,17 +617,28 @@ void adminMenu()
             cout << "  [?] Select an action --> ";
             cin >> adminoptions;
 
-            if      (adminoptions == "1")  adminDisplayAllPets();
-            else if (adminoptions == "2")  adminSearchPet();
-            else if (adminoptions == "3")  adminSortMenu();
-            else if (adminoptions == "4")  adminUpdatePet();
-            else if (adminoptions == "5")  adminDeletePet();
-            else if (adminoptions == "6")  adminInventoryStats();
-            else if (adminoptions == "7")  adminViewDonations();
-            else if (adminoptions == "8")  adminViewAdoptionRevenue();
-            else if (adminoptions == "9")  adminViewTransactionHistory();
-            else if (adminoptions == "10") adminFactoryReset();
-            else if (adminoptions == "11") break;
+            if (adminoptions == "1")
+                adminDisplayAllPets();
+            else if (adminoptions == "2")
+                adminSearchPet();
+            else if (adminoptions == "3")
+                adminSortMenu();
+            else if (adminoptions == "4")
+                adminUpdatePet();
+            else if (adminoptions == "5")
+                adminDeletePet();
+            else if (adminoptions == "6")
+                adminInventoryStats();
+            else if (adminoptions == "7")
+                adminViewDonations();
+            else if (adminoptions == "8")
+                adminViewAdoptionRevenue();
+            else if (adminoptions == "9")
+                adminViewTransactionHistory();
+            else if (adminoptions == "10")
+                adminFactoryReset();
+            else if (adminoptions == "11")
+                break;
             else
             {
                 cout << "Wrong selection! Enter again..." << endl;
@@ -674,18 +656,20 @@ void adminMenu()
     }
 }
 
-
-// ============================================================
-//              DONOR: Donate a pet to the shelter
-// ============================================================
+// Donor menu: donate a pet to the shelter
 void donorDonatePet()
 {
-    if (petCount < max_capacity) // only accept if shelter is not full
+    if (petCount < max_capacity) // only accept if shelter has some capacity
     {
         cin.ignore();
         cout << "Enter the name of the pet you want to Donate : ";
         string donateName;
         getline(cin, donateName);
+        while (donateName == "")
+        {
+            cout << "Name cannot be empty, enter again : ";
+            getline(cin, donateName);
+        }
         cout << "Enter the Pet's type : ";
         string donateType;
         getline(cin, donateType);
@@ -695,19 +679,29 @@ void donorDonatePet()
         cout << "Enter the Pet's age : ";
         int donateAge;
         cin >> donateAge;
+        while (donateAge <= 0 || donateAge > 30)
+        {
+            cout << "Invalid! Age must be between 1 and 30 : ";
+            cin >> donateAge;
+        }
         cout << "Enter the Pet's Health(in %) : ";
         double donateHealth;
         cin >> donateHealth;
+        while (donateHealth < 0 || donateHealth > 100)
+        {
+            cout << "Invalid! Health must be between 0 and 100 : ";
+            cin >> donateHealth;
+        }
         cin.ignore();
         cout << "Enter the Pet's trait (Usual Behaviour) : ";
         string donateTrait;
         getline(cin, donateTrait);
 
-        // Add new pet to arrays
-        petNames[petCount]  = donateName;
-        petTypes[petCount]  = donateType;
+        // add new pet to arrays
+        petNames[petCount] = donateName;
+        petTypes[petCount] = donateType;
         petBreeds[petCount] = donateBreed;
-        petAges[petCount]   = donateAge;
+        petAges[petCount] = donateAge;
         petHealth[petCount] = donateHealth;
         petTraits[petCount] = donateTrait;
         petCount++;
@@ -730,10 +724,7 @@ void donorDonatePet()
     }
 }
 
-
-// ============================================================
-//              DONOR: Donate money to the shelter
-// ============================================================
+// Donor menu: donate money to the shelter
 void donorDonateMoney()
 {
     system("cls");
@@ -743,6 +734,11 @@ void donorDonateMoney()
     double tempDonatedMoney;
     cout << "\n Enter amount of money to donate(in PKR) : ";
     cin >> tempDonatedMoney;
+    while (tempDonatedMoney <= 0)
+    {
+        cout << "Invalid! Amount must be greater than 0 : ";
+        cin >> tempDonatedMoney;
+    }
 
     donatedMoney = donatedMoney + tempDonatedMoney;
     addHistory("Donation", tempDonatedMoney, "General Support"); // record in history
@@ -752,10 +748,7 @@ void donorDonateMoney()
     getch();
 }
 
-
-// ============================================================
-//              DONOR: View remaining shelter capacity
-// ============================================================
+// Donor menu: view remaining shelter capacity
 void donorViewCapacity()
 {
     int tempRemainingCapacity;
@@ -773,10 +766,7 @@ void donorViewCapacity()
     getch();
 }
 
-
-// ============================================================
-//              DONOR: Full donor dashboard menu
-// ============================================================
+// Donor: full donor dashboard menu
 void donorMenu()
 {
     while (true)
@@ -794,10 +784,14 @@ void donorMenu()
         cout << "  [?] Select an action --> ";
         cin >> donorOptions;
 
-        if      (donorOptions == 1) donorDonatePet();
-        else if (donorOptions == 2) donorDonateMoney();
-        else if (donorOptions == 3) donorViewCapacity();
-        else if (donorOptions == 4) break;
+        if (donorOptions == 1)
+            donorDonatePet();
+        else if (donorOptions == 2)
+            donorDonateMoney();
+        else if (donorOptions == 3)
+            donorViewCapacity();
+        else if (donorOptions == 4)
+            break;
         else
         {
             cout << "Wrong Choice !! Please enter again...";
@@ -807,10 +801,7 @@ void donorMenu()
     }
 }
 
-
-// ============================================================
-//              CUSTOMER: View all pets
-// ============================================================
+// Customer: View all pets
 void customerViewAllPets()
 {
     system("cls");
@@ -832,10 +823,7 @@ void customerViewAllPets()
     getch();
 }
 
-
-// ============================================================
-//              CUSTOMER: Search for a specific pet
-// ============================================================
+// customer: search for a specific pet
 void customerSearchPet()
 {
     while (true)
@@ -890,10 +878,7 @@ void customerSearchPet()
     }
 }
 
-
-// ============================================================
-//              CUSTOMER: Filter pets by type
-// ============================================================
+// customer menu: filter pets by type
 void customerFilterByType()
 {
     system("cls");
@@ -925,10 +910,7 @@ void customerFilterByType()
     getch();
 }
 
-
-// ============================================================
-//              CUSTOMER: Adopt a pet
-// ============================================================
+// customer: adopt a pet
 void customerAdoptPet()
 {
     system("cls");
@@ -956,7 +938,7 @@ void customerAdoptPet()
             getch();
             system("cls");
 
-            // Confirm payment
+            // confirm payment
             string confirmationMsg;
             cout << "Confirm Payment Of " << fixFeeForAdoption << " for Adopting " << petNames[found_index] << " ?(yes/no) : ";
             getline(cin, confirmationMsg);
@@ -971,7 +953,7 @@ void customerAdoptPet()
                 cout << "=====================================\n\n";
                 cout << "\n  Congratulations on Adopting " << adoptName << " It's " << petTraits[found_index] << " \n We are sure it will be Frank with you right after!!";
 
-                removePetAt(found_index); // adopting = removing from shelter
+                removePetAt(found_index); // adopting means removing or deleting from shelter
                 break;
             }
             else
@@ -988,10 +970,7 @@ void customerAdoptPet()
     system("cls");
 }
 
-
-// ============================================================
-//              CUSTOMER: Donate money from customer side
-// ============================================================
+// customer: donate money from customer side
 void customerDonateMoney()
 {
     system("cls");
@@ -1001,6 +980,11 @@ void customerDonateMoney()
     double tempDonatedMoney;
     cout << "\n Enter amount of money to donate(in PKR) : ";
     cin >> tempDonatedMoney;
+    while (tempDonatedMoney <= 0)
+    {
+        cout << "Invalid! Amount must be greater than 0 : ";
+        cin >> tempDonatedMoney;
+    }
 
     donatedMoney = donatedMoney + tempDonatedMoney;
     addHistory("Donation", tempDonatedMoney, "Customer General Support"); // record in history
@@ -1010,10 +994,7 @@ void customerDonateMoney()
     getch();
 }
 
-
-// ============================================================
-//              CUSTOMER: Full customer dashboard menu
-// ============================================================
+// customer: full customer dashboard menu
 void customerMenu()
 {
     while (true)
@@ -1034,12 +1015,18 @@ void customerMenu()
         cout << "  [?] Select an action --> ";
         cin >> customerOptions;
 
-        if      (customerOptions == "1") customerViewAllPets();
-        else if (customerOptions == "2") customerSearchPet();
-        else if (customerOptions == "3") customerFilterByType();
-        else if (customerOptions == "4") customerAdoptPet();
-        else if (customerOptions == "5") customerDonateMoney();
-        else if (customerOptions == "6") break;
+        if (customerOptions == "1")
+            customerViewAllPets();
+        else if (customerOptions == "2")
+            customerSearchPet();
+        else if (customerOptions == "3")
+            customerFilterByType();
+        else if (customerOptions == "4")
+            customerAdoptPet();
+        else if (customerOptions == "5")
+            customerDonateMoney();
+        else if (customerOptions == "6")
+            break;
         else
         {
             cout << "Wrong choice!! Please enter again\n";
@@ -1049,10 +1036,7 @@ void customerMenu()
     }
 }
 
-
-// ============================================================
-//              MAIN: Home screen / role selection
-// ============================================================
+// main menu:Home screen
 void showHomeScreen()
 {
     cout << "\n====================================================" << endl;
@@ -1068,10 +1052,7 @@ void showHomeScreen()
     cout << "  [?] Select your role --> ";
 }
 
-
-// ============================================================
-//                          MAIN
-// ============================================================
+// main function meaning driver code starts here
 int main()
 {
     string mainoptions;
@@ -1082,10 +1063,14 @@ int main()
         showHomeScreen();
         cin >> mainoptions;
 
-        if      (mainoptions == "1") adminMenu();    // go to admin section
-        else if (mainoptions == "2") donorMenu();    // go to donor section
-        else if (mainoptions == "3") customerMenu(); // go to customer section
-        else if (mainoptions == "4") break;          // exit application
+        if (mainoptions == "1")
+            adminMenu(); // goto admin section
+        else if (mainoptions == "2")
+            donorMenu(); // goto donor section
+        else if (mainoptions == "3")
+            customerMenu(); // go to customer section
+        else if (mainoptions == "4")
+            break; // exit application
         else
         {
             cout << "Wrong Choice... Please enter again!!" << endl
