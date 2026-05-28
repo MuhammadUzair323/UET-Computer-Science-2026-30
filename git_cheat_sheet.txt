@@ -1,0 +1,108 @@
+===============================================================================
+                       GIT COMMANDS CHEAT SHEET & PLAYBOOK
+                 Tailored for: UET-Computer-Science-2026-30
+===============================================================================
+
+This file serves as your personal quick-reference guide for keeping your university 
+master repository perfectly organized. It covers daily work, adding new subjects,
+handling multiple subjects at once, and fixing common Git errors.
+
+-------------------------------------------------------------------------------
+                      SCENARIO 1: DAILY WORK (THE SYSTEMATIC ROUTINE)
+-------------------------------------------------------------------------------
+Use these commands when you have finished a task, lab, or assignment for a subject
+and want to save it safely to GitHub.
+
+Step 1: Open Git Bash inside your main folder ("UNI Syllabus and Work etc")
+Step 2: Check what files have been changed or added:
+    git status
+
+Step 3: Track only the specific folder you worked on (Prevents messy combined commits)
+    git add SEM1/[FOLDER_NAME]/
+    --> CHANGE: Replace [FOLDER_NAME] with your exact subject folder (e.g., PF, AICT, DM)
+    --> EXAMPLE: git add SEM1/PF/
+
+Step 4: Commit your changes with a clear, clear message:
+    git commit -m "[YOUR_MESSAGE]"
+    --> CHANGE: Replace [YOUR_MESSAGE] with what you actually did.
+    --> EXAMPLE: git commit -m "Completed Week 12 Recursion Lab Task"
+
+Step 5: Push your work directly to GitHub:
+    git push origin main
+
+
+-------------------------------------------------------------------------------
+                      SCENARIO 2: WORKING ON TWO SUBJECTS AT ONCE
+-------------------------------------------------------------------------------
+Use this when you have worked on both PF and DM at the same time, but you want to
+push them with separate, clean commits instead of putting them into one messy pile.
+
+Step 1: Check your modified files:
+    git status
+    (You will see files changed in both subject folders listed in RED)
+
+Step 2: Add and commit ONLY Subject A (e.g., PF):
+    git add SEM1/PF/
+    git commit -m "Finished PF assignment 3"
+
+Step 3: Add and commit ONLY Subject B (e.g., DM):
+    git add SEM1/DM/
+    git commit -m "Solved Discrete Math week 11 practice problems"
+
+Step 4: Push both clean commits to GitHub together:
+    git push origin main
+
+* NOTE: Running 'git status' will show files ready to be committed in GREEN,
+  and files that will safely stay on your computer for later in RED.
+
+
+-------------------------------------------------------------------------------
+                      SCENARIO 3: ACCIDENTAL 'GIT ADD .' (EMERGENCY RESET)
+-------------------------------------------------------------------------------
+If you accidentally type 'git add .' and stage unfinished files from other subjects 
+that you did NOT want to commit yet, do not panic!
+
+Step 1: Instantly unstage everything and drop them back to safety:
+    git reset
+    (This safely undoes the 'git add' action. Your files are NOT deleted or ruined;
+     they just turn back to RED so you can add them one by one correctly.)
+
+
+-------------------------------------------------------------------------------
+                      SCENARIO 4: STARTING A NEW SEMESTER (SEM2, SEM3, ETC.)
+-------------------------------------------------------------------------------
+When a new semester begins, you DO NOT need to run 'git init' ever again. Follow this:
+
+Step 1: Open your main "UNI Syllabus and Work etc" folder using Windows File Explorer.
+Step 2: Create a brand new folder named: SEM2
+Step 3: Inside SEM2, make your new subject folders (e.g., OOP, Data-Structures).
+Step 4: Write your code normally. When you are ready to push your first Week 1 OOP task:
+    git add SEM2/OOP/
+    git commit -m "Added Week 1 OOP Lab tasks"
+    git push origin main
+
+
+-------------------------------------------------------------------------------
+                      SCENARIO 5: SAFELY MOVING/RENAMING FILES
+-------------------------------------------------------------------------------
+Because you love keeping your layouts pristine, if you ever want to move a file or 
+rename a folder, use Git to do it so it doesn't break your tracking history!
+
+To rename/move a file or folder:
+    git mv [OLD_PATH] [NEW_PATH]
+    --> EXAMPLE: git mv SEM1/PF/week4 SEM1/PF/Week04
+    git commit -m "Fixed naming format for week 4 folder"
+    git push origin main
+
+
+===============================================================================
+                     PRO TIPS FOR MAX HYPER-ORGANIZATION
+===============================================================================
+1. Always run 'git status' before doing any 'git add'. It acts as your visual 
+   confirmation screen to make sure you know exactly what is happening.
+2. Keep your folder names standardized (e.g., either use all capital 'Week' or all 
+   lowercase 'week'). Consistency makes a profile look incredible.
+3. If Git ever feels stuck or prompts a weird message, type 'q' to instantly exit 
+   the log/terminal screen.
+
+===============================================================================
